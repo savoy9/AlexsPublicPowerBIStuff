@@ -23,13 +23,13 @@ What is Inclusivity?
 * [Inclusion](https://www.bing.com/search?q=inclusion): The practice or policy of providing equal access to opportunities.
 
 Microsoft's internal definitions are a bit longer.
-* Diversity is the full range of humand and/or organizational differences
+* Diversity is the full range of human and/or organizational differences
 * Inclusion is the process of leveraging the power of differences and similarities to effectively integrate everyone into the culture of the organization to achive a comon objective.
   
 Put those together and you get something like: 
-* *provide equal access to opportunities for people from a range of different backgrounds*.
+* *Provide equal access to opportunities for every person to levearge their unique differences*.
    
-That's what we need to design for. We need to plan for a group of people that have unusual skills and experiences that push the limits of the definitions of their roles. 
+That's what we need to design for. We need to plan for a group of people that have unusual skills and experiences that push the limits of the definitions of their roles. Sometimes they will have exceptional and unusual skills and sometimes they will have unusual areas for growth. Our systems need to allow them to leverage their strengths to accomplish unexpected and amazing things with impacts beyond their scope. At the same time our systems need to support personal growth and make data accessible to all.
 
 We have Sales people that are skilled software developers and we have very sucessful business analysts that can't create their own Power BI reports and others that know 5 programing languages. We have sales managers that were software engineers and engineering PMs that got into Sales Ops. Most of the business analysts that I work with used to be in sales roles. One of our Sales VP was a philosophy professor. I used to be a chemist.
 
@@ -48,12 +48,39 @@ Just in the past year we've a small sample of new sales people we've hired have 
 
 On the business analyst side, we have many a long list of technical skills represented: Power BI, Excel, Python, R, SQL, SSRS, Tableau, SAS, SAP, Big Query, Red Shift, Hadoop, Hive, Visual Basic, C#, Kusto.
 
-Diversity in professional and technical background will inform the design of our data infastructure in important ways, but it is not the only kind of diversity that is common to our group. We also have an incredible and growing set of cultural and ethnic backgrounds. We have teams on five continents and dozens of cities. All of these different cultures and backgrounds come diverse references for communication, for learning, for story telling, for decision making [3]. Ultimately, these are the behaviors we are empowering to be done more effectively through data.
+Diversity in professional and technical background will inform the design of our data infastructure in important ways, but it is not the only kind of diversity that is common to our group. We also have an incredible and growing set of cultural and ethnic backgrounds. We have teams on five continents and dozens of cities. All of these different cultures and backgrounds come diverse references for communication, for learning, for story telling, for decision making [3]. 
+
+Ultimately, these are the behaviors we are empowering. As a result we also need to plan for varied communication styles and mediums. This impacts both our trainning and support plans and the design of our systems and reports.
+
+How does this impact our infastructure design?
+--
+
+self serve
+
+self serve is a reality at microsoft
+
+double edge sword
+
+central is accessible
+
+enable and empower unusually technical users
+
+all capabilites available to all
+
+compliance built into all levels
+
+security by data type, not by access mode
+
+central bi must ship or shadow bi
+
+build a fast feedback loop to avoid shadow BI. Flywheel. protoypes, not shadows
+
+GTM and trainning.
 
 
 
 
 
 [1] [We really like this framing](https://www.microsoft.com/en-us/about)
-[2] This post is going to be THICK with Microsoft buzz words because it is about positioning the role of data infastructure at the center of our cultural ethos.
+[2] This is the end of the Microsoft buzz words. I'm using them on purpose because the post is about positioning the role of data infastructure at the center of our cultural ethos.
 [3] Professional background can have a big impact on this as well. Sterotypically, our cross lake transplants from amazon are much more comfortable with the essay than the slide deck.
