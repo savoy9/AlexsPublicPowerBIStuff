@@ -69,7 +69,7 @@ VAR User = USERPRINCIPALNAME()
 VAR QueryTime = Format(NOW(),"yyyy-mm-dd_hh:mm")
 
 // This is the base URL for the Flow Trigger that stores the request URL and serves the image back
-Var FlowRequestBaseURL = "https:// prod-26.westcentralus.logic.azure.com/workflows/b254c11499ce4eccb33bda9127c441e9/triggers/manual/paths/invoke/UserData/{Data}?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=U3H5ObdN34RIo5_Fv7TMqQbd0S5oBX0xa_4EbEsM5I4"
+Var FlowRequestBaseURL = "{GET THIS URL FROM YOUR FLOW}"
 
 
 // This Assembles the Data Package to send to flow
