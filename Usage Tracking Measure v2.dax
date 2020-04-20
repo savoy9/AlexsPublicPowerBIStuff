@@ -1,0 +1,132 @@
+﻿Power BI Usage Tracking Measure =
+// todo: 
+// handle all special characters, not just spaces
+// handle schema errors in optional parameters
+
+
+// **SETUP** Fill Out these Variables with your information
+//The output is a URL so special characters aren't allowed. 
+//but the code automatically cleans spaces, so you don't have to worry about that
+
+// **REQUIRED**: Report Tracking
+VAR	ReportName = "YourReportNameHere"
+VAR WorkspaceName = "YourWorkspaceName"
+VAR ReportOwnerContact = "myalias@microsoft.com" // Can be group alias
+VAR PrimaryDataSource = "YourDataSourceNameHere"
+// End Required Setup
+
+// **OPTIONAL**: State Tracking
+/*
+ Report Page or bookmark state
+ This Variable uses the SELECTEDVALUE to determine which row of 
+ a table called "ReportState" is selected in the current context. 
+ If you create a table with this name and then filter each 
+ report page or bookmark to the coresponding value, the tracker will track that. 
+ If don't, uncomment the string and comment out the function and, you will only 
+ track report usage and not page usage
+*/
+
+VAR ReportPageState = 
+	"NotTracked"
+	//SelectedValue('ReportState'[State],"Other State")
+	
+/*
+Data Freshness Metadata. If you have a table that lists the date of most recent data 
+in your data source, you can include a single date here.
+The example here is how you would query the MSA Data Analytics Platform's metadata table.
+*/
+
+Var FreshnessMetadata =
+	//"1900-01-01"
+	FORMAT(CALCULATE(SELECTEDVALUE('Data Freshness'[Freshness]),'Data Freshness'[Entity]="FactMonthlyRevenue"),"yyyy-mm-dd")
+
+/*
+Model Refresh Metadata. This tracks when your Power BI report itself was specifically refreshed. 
+In combination with the previous metric, it enables you to measure the impacted of missed refreshes 
+and track the lag between refresh and data in your system.
+this is accomplished by adding a power query custom column to you model with the function DateTime.FixedLocalNow()
+*/
+
+Var ModelRefresh = 
+	"1900-01-01"
+	//FORMAT(min(Data Freshness'[Model Refresh Date-Time]),"yyyy-mm-dd")
+
+/*
+ Similar to page state, you can track the filter context of as many fields  as you like. 
+ The context will be output as a list to the Usage DB
+ Two examples are provided and you can add as many more as you like.
+ Replace "ColumnName" Below with Text value you want to return, and replace 'Table'[Column] with the column you are monitoring. 
+ 'Table'[Column] Must be a string typed column, not number or date. If you need another type, you can use Format() to convert it to text.
+*/
+
+//If you want to use this feature, start by commenting out the next line
+AssembledContextString = "Not Tracked = Not Tracked"
+
+//Now, uncomment the below, up to "//*Stop Here*"
+
+//VAR FilterContext1 = 
+//	"'Table'[Column]" & " = " & 
+//	IF(ISFILTERED('Table'[Column]),
+//		SelectedValue('Table'[Column],"More than one value"),
+//		"NotFiltered"
+//	)
+//	
+//VAR FilterContext2 =
+//	"'Table'[Column]" & " = " &
+//	IF(ISFILTERED('Table'[Column]),
+//		SelectedValue('Table'[Column],"More than one value"),
+//		"NotFiltered"
+//	)
+//	
+//VAR AssembledContextString = 
+//	FilterContext1
+//	& "|" & FilterContext2
+	
+//*STOP HERE*
+
+
+// If you are using Dax Studio's auto generated Dump Filters measure, comment out the precending section and instead uncomment the below.
+//Var AssembledContextString = SUBSTITUTE([DumpFilters],UNICHAR(13) & UNICHAR(10),"|")
+
+VAR OtherData = "Unused"
+
+// **END SETUP**. Do not change anything below this line
+
+/*
+ UPN returns alias@microsoft.com when called from the PBI service, but Domain\alias when called from PBI desktop.
+ As a result, the entire function fails when called from desktop as \ is a special character in a URL.
+ I consider this a feature not a bug, but if you want to change the behavior you can use the commented code to also track desktop usage.
+*/
+VAR User = USERPRINCIPALNAME()
+//VAR User = SUBSTITUTE(USERPRINCIPALNAME(),"\","-")
+
+VAR QueryTime = Format(NOW(),"yyyy-mm-dd hh:mm")
+
+// This is the base URL for the Flow Trigger that stores the request URL and serves the image back
+Var FlowRequestBaseURL = "https://prod-06.westcentralus.logic.azure.com/workflows/55295c92660e4d4ca5d25a0b7efb5d88/triggers/manual/paths/invoke/UserData/{Data}?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dzxOBcuMIlDLPD3yXgxURMzae_av9FxvgSEY9YlCnuc"
+
+
+// This Assembles the Data Package to send to flow
+Var AssembledDataPacakge =
+	User & ";" &
+	ReportName & ";" & 
+	WorkspaceName & ";" &
+	ReportOwnerContact & ";" & 
+	PrimaryDataSource & ";" &
+	QueryTime & ";" &
+	ReportPageState & ";" &
+	FreshnessMetadata & ";" &
+	ModelRefresh & ";" &
+	AssembledContextString & ";" &
+	OtherData
+
+// Clean the package for special characters
+VAR CleanedDataPackage =
+	SUBSTITUTE ( AssembledDataPacakge," ", "%20" )
+
+// This is the final URL to send to flow
+VAR AssembledURL = 
+	SUBSTITUTE(FlowRequestBaseURL, "{Data}", CleanedDataPackage)
+	
+Return
+AssembledURL
