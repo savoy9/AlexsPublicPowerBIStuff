@@ -55,15 +55,15 @@ Var ModelRefresh =
  Similar to page state, you can track the filter context of as many fields  as you like. 
  The context will be output as a list to the Usage DB
 
- If you are using Dax Studio's auto generated Dump Filters measure, uncomment the below. */
+ If you are using Dax Studio's auto generated Dump Filters measure, uncomment line 60 and comment line 62. */
  
 //Var AssembledContextString = SUBSTITUTE([DumpFilters],UNICHAR(13) & UNICHAR(10),"|")
 
+AssembledContextString = "Not Tracked = Not Tracked"
+
 /*
 If you want to use build your own targeted filter trackers use the examples below as a template.
-start by commenting out the next line
-AssembledContextString = "Not Tracked = Not Tracked"
-Then, delete the "/*" and "*/" on lines 71 & 91
+start by commenting out line Then, delete the "/*" and "*/" on lines 71 & 91
 Replace "ColumnName" Below with Text value you want to return, and replace 'Table'[Column] with the column you are monitoring. 
  'Table'[Column] Must be a string typed column, not number or date. If you need another type, you can use Format() to convert it to text.
 */
