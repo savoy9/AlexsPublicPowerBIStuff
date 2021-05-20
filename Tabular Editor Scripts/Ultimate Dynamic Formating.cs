@@ -96,12 +96,11 @@ foreach(var cg in Model.CalculationGroups) {
             REPT ( ""$"", DollarSign ) & BaseFormat
         ),
     SELECTEDMEASUREFORMATSTRING ()
-)";
-        newCalcItem.FormatDax();
+)";};
       if (!cg.CalculationItems.Contains("Dynamic Format - 0 dp (All Measures)")) {
-              var newCalcItem2 = cg.AddCalculationItem(
-              "Dynamic Format - 0 dp (All Measures)", "SELECTEDMEASURE()");
-              newCalcItem2.FormatStringExpression = 
+        var newCalcItem2 = cg.AddCalculationItem(
+        "Dynamic Format - 0 dp (All Measures)", "SELECTEDMEASURE()");
+        newCalcItem2.FormatStringExpression = 
 @"VAR dp = 0
 VAR dps =
     ""."" & REPT ( 0, dp )
@@ -130,6 +129,229 @@ RETURN
         REPT ( ""$"", DollarSign ) & BaseFormat
     )";
       };
-    };
+      if (!cg.CalculationItems.Contains("Dynamic Format - 1 dp")) {
+        var newCalcItem3 = cg.AddCalculationItem(
+        "Dynamic Format - 1 dp", "SELECTEDMEASURE()");
+        newCalcItem3.FormatStringExpression = 
+@"IF (
+    " + MeasureLogic + @",
+    VAR dp = 1
+    VAR dps =
+        ""."" & REPT ( 0, dp )
+    VAR SafeLog =
+        IF (
+            SELECTEDMEASURE () = 0,
+            0,
+            INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+        )
+    VAR Suffix =
+        SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+    VAR Commas =
+        REPT ( "","", ABS ( Safelog ) )
+    VAR BaseFormat =
+        IF (
+            dp > 0,
+            ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+            ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+        )
+    VAR DollarSign =
+        IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+    RETURN
+        IF (
+            SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+            SELECTEDMEASUREFORMATSTRING (),
+            REPT ( ""$"", DollarSign ) & BaseFormat
+        ),
+    SELECTEDMEASUREFORMATSTRING ()
+)";
+      };
+      if (!cg.CalculationItems.Contains("Dynamic Format - 1 dp (All Measures)")) {
+          var newCalcItem4 = cg.AddCalculationItem(
+          "Dynamic Format - 1 dp (All Measures)", "SELECTEDMEASURE()");
+          newCalcItem4.FormatStringExpression = 
+@"VAR dp = 1
+VAR dps =
+    ""."" & REPT ( 0, dp )
+VAR SafeLog =
+    IF (
+        SELECTEDMEASURE () = 0,
+        0,
+        INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+    )
+VAR Suffix =
+    SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+VAR Commas =
+    REPT ( "","", ABS ( Safelog ) )
+VAR BaseFormat =
+    IF (
+        dp > 0,
+        ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+        ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+    )
+VAR DollarSign =
+    IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+RETURN
+    IF (
+        SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+        SELECTEDMEASUREFORMATSTRING (),
+        REPT ( ""$"", DollarSign ) & BaseFormat
+    )";
+      };
+
+      if (!cg.CalculationItems.Contains("Dynamic Format - 2 dp")) {
+        var newCalcItem = cg.AddCalculationItem(
+        "Dynamic Format - 2 dp", "SELECTEDMEASURE()");
+        newCalcItem.FormatStringExpression = 
+@"IF (
+    " + MeasureLogic + @",
+    VAR dp = 2
+    VAR dps =
+        ""."" & REPT ( 0, dp )
+    VAR SafeLog =
+        IF (
+            SELECTEDMEASURE () = 0,
+            0,
+            INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+        )
+    VAR Suffix =
+        SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+    VAR Commas =
+        REPT ( "","", ABS ( Safelog ) )
+    VAR BaseFormat =
+        IF (
+            dp > 0,
+            ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+            ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+        )
+    VAR DollarSign =
+        IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+    RETURN
+        IF (
+            SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+            SELECTEDMEASUREFORMATSTRING (),
+            REPT ( ""$"", DollarSign ) & BaseFormat
+        ),
+    SELECTEDMEASUREFORMATSTRING ()
+)";};
+      if (!cg.CalculationItems.Contains("Dynamic Format - 2 dp (All Measures)")) {
+        var newCalcItem2 = cg.AddCalculationItem(
+        "Dynamic Format - 2 dp (All Measures)", "SELECTEDMEASURE()");
+        newCalcItem2.FormatStringExpression = 
+@"VAR dp = 2
+VAR dps =
+    ""."" & REPT ( 0, dp )
+VAR SafeLog =
+    IF (
+        SELECTEDMEASURE () = 0,
+        0,
+        INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+    )
+VAR Suffix =
+    SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+VAR Commas =
+    REPT ( "","", ABS ( Safelog ) )
+VAR BaseFormat =
+    IF (
+        dp > 0,
+        ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+        ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+    )
+VAR DollarSign =
+    IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+RETURN
+    IF (
+        SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+        SELECTEDMEASUREFORMATSTRING (),
+        REPT ( ""$"", DollarSign ) & BaseFormat
+    )";
+      };
+      if (!cg.CalculationItems.Contains("Dynamic Format - Auto Precision")) {
+        var newCalcItem3 = cg.AddCalculationItem(
+        "Dynamic Format - Auto Precision", "SELECTEDMEASURE()");
+        newCalcItem3.FormatStringExpression = 
+@"IF (
+    " + MeasureLogic + @",
+    VAR dp = 1
+    VAR GetMax =
+        CALCULATE (
+            MAXX ( Data, ABS ( SELECTEDMEASURE () ) ),
+            ALLSELECTED ( Data[Some Field] )
+        )
+    VAR GetMaxLog =
+        IF ( GetMax = 0, 0, INT ( LOG ( ABS ( GetMax ), 1000 ) ) )
+    VAR SafeLog =
+        IF (
+            SELECTEDMEASURE () = 0,
+            0,
+            INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+        )
+    VAR dp_Adjusted =
+        IF ( SafeLog = GetMaxLog, dp, 0 )
+    VAR Suffix =
+        SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+    VAR Commas =
+        REPT ( "","", ABS ( Safelog ) )
+    RETURN
+        VAR dps =
+            ""."" & REPT ( 0, dp_Adjusted )
+        VAR BaseFormat =
+            IF (
+                dp_Adjusted > 0,
+                ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+                ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+            )
+        VAR DollarSign =
+            IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+        RETURN
+            IF (
+                SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+                SELECTEDMEASUREFORMATSTRING (),
+                REPT ( ""$"", DollarSign ) & BaseFormat
+            ),
+    SELECTEDMEASUREFORMATSTRING ()
+)";
+      };
+        if (!cg.CalculationItems.Contains("Dynamic Format - Auto Precision (All Measures)")) {
+          var newCalcItem4 = cg.AddCalculationItem(
+          "Dynamic Format - Auto Precision (All Measures)", "SELECTEDMEASURE()");
+          newCalcItem4.FormatStringExpression = 
+@"VAR dp = 1
+    VAR GetMax =
+        CALCULATE (
+            MAXX ( Data, ABS ( SELECTEDMEASURE () ) ),
+            ALLSELECTED ( Data[Some Field] )
+        )
+    VAR GetMaxLog =
+        IF ( GetMax = 0, 0, INT ( LOG ( ABS ( GetMax ), 1000 ) ) )
+    VAR SafeLog =
+        IF (
+            SELECTEDMEASURE () = 0,
+            0,
+            INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+        )
+    VAR dp_Adjusted =
+        IF ( SafeLog = GetMaxLog, dp, 0 )
+    VAR Suffix =
+        SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+    VAR Commas =
+        REPT ( "","", ABS ( Safelog ) )
+    RETURN
+        VAR dps =
+            ""."" & REPT ( 0, dp_Adjusted )
+        VAR BaseFormat =
+            IF (
+                dp_Adjusted > 0,
+                ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+                ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+            )
+        VAR DollarSign =
+            IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+        RETURN
+            IF (
+                SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+                SELECTEDMEASUREFORMATSTRING (),
+                REPT ( ""$"", DollarSign ) & BaseFormat
+            )";
+          };
   };
 };
