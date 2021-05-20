@@ -13,6 +13,7 @@ string calcGroupName = "Dynamic Formating (Calc Group)";
 //add the name for the column you want to appear in the calculation group
 string columnName = "Formula";
 
+
 //
 // ----- do not modify script below this line -----
 //
