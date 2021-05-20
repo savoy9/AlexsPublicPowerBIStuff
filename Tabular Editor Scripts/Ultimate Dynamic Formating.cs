@@ -26,16 +26,16 @@ if (Selected.Measures.Count == 0) {
 //create an OR block that will be true for any of the selected measures
 string s = " ";
 foreach (var m in Selected.Measures) {
-    s.append(
+    s += 
         "ISSELECTEDMEASURE ( ["
         + m.Name
-        + "] ) || ");
+        + @"] ) 
+        || ";
 
-}
-;
+};
 
 //trim off the trailling OR operator
-string MeasureLogic = s.trimend('|').trimend('|') ;
+string MeasureLogic = s.Remove(s.Length-4,4) ;
 
 //check to see if a table with this name already exists
 //if it doesnt exist, create a calculation group with this name
@@ -66,37 +66,70 @@ foreach(var cg in Model.CalculationGroups) {
         var newCalcItem = cg.AddCalculationItem(
         "Dynamic Format - 0 dp", "SELECTEDMEASURE()");
         newCalcItem.FormatStringExpression = 
-" IF (" + MeasureLogic + " )," +
-    "VAR dp = 0" +
-    "VAR dps =" +
-        "\".\" & REPT ( 0, dp )" +
-    "VAR SafeLog =" +
-        "IF (" +
-            "SELECTEDMEASURE () = 0," +
-            "0," +
-            "INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )" +
-        ")" +
-    "VAR Suffix =" +
-        "SWITCH ( Safelog, 1, \"K\", 2, \"M\", 3, \"bn\", 4, \"tn\", 5, \"q\" )" +
-    "VAR Commas =" +
-        "REPT ( \",\", ABS ( Safelog ) )" +
-    "VAR BaseFormat =" +
-        "IF (" +
-            "dp > 0," +
-            "\"#,##0\" & Commas & dps & Suffix & \";-#,##0\" & Commas & dps & Suffix & \";-\","+
-            "\"#,##0\" & Suffix & Commas & \";-#,##0\" & Suffix & Commas & \";-\"" +
-        ")"+
-    "VAR DollarSign =" +
-        "IF ( SEARCH ( \"$\", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )" +
-    "RETURN" +
-        "IF (" +
-            "SEARCH ( \"%\", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0," +
-            "SELECTEDMEASUREFORMATSTRING ()," +
-            "REPT ( \"$\", DollarSign ) & BaseFormat" +
-        ")," +
-    "SELECTEDMEASUREFORMATSTRING ()" +
-")";
+@"IF (
+    " + MeasureLogic + @",
+    VAR dp = 0
+    VAR dps =
+        ""."" & REPT ( 0, dp )
+    VAR SafeLog =
+        IF (
+            SELECTEDMEASURE () = 0,
+            0,
+            INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+        )
+    VAR Suffix =
+        SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+    VAR Commas =
+        REPT ( "","", ABS ( Safelog ) )
+    VAR BaseFormat =
+        IF (
+            dp > 0,
+            ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+            ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+        )
+    VAR DollarSign =
+        IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+    RETURN
+        IF (
+            SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+            SELECTEDMEASUREFORMATSTRING (),
+            REPT ( ""$"", DollarSign ) & BaseFormat
+        ),
+    SELECTEDMEASUREFORMATSTRING ()
+)";
         newCalcItem.FormatDax();
+      if (!cg.CalculationItems.Contains("Dynamic Format - 0 dp (All Measures)")) {
+              var newCalcItem2 = cg.AddCalculationItem(
+              "Dynamic Format - 0 dp (All Measures)", "SELECTEDMEASURE()");
+              newCalcItem2.FormatStringExpression = 
+@"VAR dp = 0
+VAR dps =
+    ""."" & REPT ( 0, dp )
+VAR SafeLog =
+    IF (
+        SELECTEDMEASURE () = 0,
+        0,
+        INT ( LOG ( ABS ( SELECTEDMEASURE () ), 1000 ) )
+    )
+VAR Suffix =
+    SWITCH ( Safelog, 1, ""K"", 2, ""M"", 3, ""bn"", 4, ""tn"", 5, ""q"" )
+VAR Commas =
+    REPT ( "","", ABS ( Safelog ) )
+VAR BaseFormat =
+    IF (
+        dp > 0,
+        ""#,##0"" & Commas & dps & Suffix & "";-#,##0"" & Commas & dps & Suffix & "";-"",
+        ""#,##0"" & Suffix & Commas & "";-#,##0"" & Suffix & Commas & "";-""
+    )
+VAR DollarSign =
+    IF ( SEARCH ( ""$"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0, 1, 0 )
+RETURN
+    IF (
+        SEARCH ( ""%"", SELECTEDMEASUREFORMATSTRING (), 1, 0 ) > 0,
+        SELECTEDMEASUREFORMATSTRING (),
+        REPT ( ""$"", DollarSign ) & BaseFormat
+    )";
       };
     };
   };
+};
