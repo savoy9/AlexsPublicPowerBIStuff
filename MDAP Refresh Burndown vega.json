@@ -1,0 +1,70 @@
+{
+  "data": {"name": "dataset"},
+  "layer" : [
+    {
+      "mark": {
+        "type": "bar",
+        "stroke": "black",
+        "tooltip": true
+      },
+      "encoding": {
+        "x": {
+          "field": "Age Max",
+          "type": "quantitative"
+          },
+        "color": {
+            "condition": [
+                {"test": 
+                  "datum['Refresh Age'] < 22", 
+                  "value": "green"},
+                {"test": 
+                  "datum['Refresh Age'] < 26", 
+                  "value": "blue"
+                },
+                {"test": 
+                  "datum['Refresh Age'] < 48", 
+                  "value": "yellow"
+                }
+              ],
+          "value": "red"
+        }
+      }
+    },
+    {   
+      "mark": {
+        "type": "bar",
+        "stroke": "black",
+        "tooltip": true
+      },
+      "encoding": {
+        "x": {
+          "field": "Refresh Age",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 72], 
+            "reverse": true
+          },
+          "axis": {
+            "title": "Hrs since last refresh",
+            "ticks": true,
+            "tickCount": 4,
+            "values": [
+              0,
+              24,
+              48,
+              72
+            ]
+          }
+        },
+        "color": {
+            "condition":
+                {"test": 
+                  "datum['Refresh Age'] > 72", 
+                  "value": "red"
+                },
+          "value": "white"
+        }
+      }
+    }
+  ]
+}
