@@ -1,0 +1,29 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Selected Month] = 
+		(/* USER DAX BEGIN */
+VAR ym=SELECTEDVALUE(DimDate[YearMonthKey]) RETURN IF(ISBLANK(ym),"Select one month",FORMAT(DATE(INT(ym/100),MOD(ym,100),1),"MMM yyyy"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Partial Badge] = 
+		(/* USER DAX BEGIN */
+COALESCE([Partial Month Text],"")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Empty Text] = 
+		(/* USER DAX BEGIN */
+IF(COALESCE([Order Lines],0)=0,"No sales for this selection","")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Orders] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Order Count]),"—",FORMAT([Order Count],"#,0"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card AOV] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([AOV]),"—",FORMAT([AOV],"$#,0.00"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Orders Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Orders MoM %]),[Orders Compare Text],IF([Orders MoM %]>=0,"▲ ","▼ ")&[Orders Compare Text])
+/* USER DAX END */)
+VAR __CardsFilter = TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+SUMMARIZECOLUMNS(__CardsFilter, "__card_Month", IGNORE('FactInternetSales'[AW Selected Month]), "__card_Partial", IGNORE('FactInternetSales'[AW Partial Badge]), "__card_Empty", IGNORE('FactInternetSales'[AW Empty Text]), "__card_Orders", IGNORE('FactInternetSales'[AW Card Orders]), "__card_AOV", IGNORE('FactInternetSales'[AW Card AOV]), "__card_OrdersCompare", IGNORE('FactInternetSales'[AW Orders Compare]))

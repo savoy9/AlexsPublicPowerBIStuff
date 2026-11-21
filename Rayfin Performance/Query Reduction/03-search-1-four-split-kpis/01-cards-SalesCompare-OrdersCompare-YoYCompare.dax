@@ -1,0 +1,17 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Sales Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Sales MoM %]),[Sales Compare Text],IF([Sales MoM %]>=0,"▲ ","▼ ")&[Sales Compare Text])
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Orders Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Orders MoM %]),[Orders Compare Text],IF([Orders MoM %]>=0,"▲ ","▼ ")&[Orders Compare Text])
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW YoY Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Sales YoY %]),[Sales YoY Compare Text],IF([Sales YoY %]>=0,"▲ ","▼ ")&[Sales YoY Compare Text])
+/* USER DAX END */)
+VAR __CardsFilter = TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+SUMMARIZECOLUMNS(__CardsFilter, "__card_SalesCompare", IGNORE('FactInternetSales'[AW Sales Compare]), "__card_OrdersCompare", IGNORE('FactInternetSales'[AW Orders Compare]), "__card_YoYCompare", IGNORE('FactInternetSales'[AW YoY Compare]))

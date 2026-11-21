@@ -1,0 +1,21 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Card Sales] = 
+		(/* USER DAX BEGIN */
+VAR v=[Total Sales] RETURN IF(ISBLANK(v),"—",IF(ABS(v)>=1000000,FORMAT(v/1000000,"$0.0")&"M",IF(ABS(v)>=1000,FORMAT(v/1000,"$0.0")&"K",FORMAT(v,"$0.00"))))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Margin] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Gross Margin]),"—",FORMAT([Gross Margin],"0.0%"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Orders] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Order Count]),"—",FORMAT([Order Count],"#,0"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card AOV] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([AOV]),"—",FORMAT([AOV],"$#,0.00"))
+/* USER DAX END */)
+VAR __CardsFilter = TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+SUMMARIZECOLUMNS(__CardsFilter, "__card_Sales", IGNORE('FactInternetSales'[AW Card Sales]), "__card_Margin", IGNORE('FactInternetSales'[AW Card Margin]), "__card_Orders", IGNORE('FactInternetSales'[AW Card Orders]), "__card_AOV", IGNORE('FactInternetSales'[AW Card AOV]), "__card_Profit", IGNORE('FactInternetSales'[Gross Profit]))

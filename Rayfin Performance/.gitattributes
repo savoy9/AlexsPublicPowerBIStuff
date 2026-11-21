@@ -1,0 +1,2 @@
+# Preserve the original query payload bytes, including mixed line endings.
+*.dax -text whitespace=cr-at-eol,-blank-at-eol,-blank-at-eof

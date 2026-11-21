@@ -1,0 +1,2 @@
+EVALUATE
+SUMMARIZECOLUMNS('DimDate'[YearMonth], TREATAS({"2013-11", "2013-10", "2012-11"}, 'DimDate'[YearMonth]), "Sales", [Total Sales], "Orders", [Order Count], "Lines", [Order Lines], "Profit", [Gross Profit], "Partial", [Partial Month Text], "SourceLastDate", [Source Last Date])

@@ -1,0 +1,14 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Partial Badge] = 
+		(/* USER DAX BEGIN */
+COALESCE([Partial Month Text],"")
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-11"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(
+		__DS0FilterTable,
+		"AW Partial Badge", IGNORE('FactInternetSales'[AW Partial Badge])
+	)

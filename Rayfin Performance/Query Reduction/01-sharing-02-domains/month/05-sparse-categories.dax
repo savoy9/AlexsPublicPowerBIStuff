@@ -1,0 +1,31 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Category Title] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Total Sales]),"No data for the current filters","What · Category — click to filter; right-click to drill through")
+/* USER DAX END */)
+
+
+	VAR __DS0FilterTable_categories = 
+		TREATAS({"2013-11"}, 'DimDate'[YearMonth])
+
+	VAR __DS0Core_categories = 
+		SUMMARIZECOLUMNS(
+			'DimProductCategory'[EnglishProductCategoryName],
+			__DS0FilterTable_categories,
+			"Total_Sales", 'FactInternetSales'[Total Sales],
+			"Gross_Margin", IGNORE('FactInternetSales'[Gross Margin]),
+			"Order_Count", IGNORE('FactInternetSales'[Order Count])
+		)
+
+	VAR __DS0PrimaryWindowed_categories = 
+		TOPN(1001, __DS0Core_categories, [Total_Sales], 0, 'DimProductCategory'[EnglishProductCategoryName], 1)
+
+EVALUATE
+UNION(
+  SELECTCOLUMNS(SUMMARIZECOLUMNS(
+		__DS0FilterTable_categories,
+		"AW Category Title", IGNORE('FactInternetSales'[AW Category Title])
+	), "__slot", "categories", "__part", 0, "__label", BLANK(), "__date", BLANK(), "__sales", BLANK(), "__margin", BLANK(), "__orders", BLANK(), "__partial", BLANK(), "__text", [AW Category Title], "__num", BLANK(), "__count", COALESCE(COUNTROWS(__DS0PrimaryWindowed_categories), 0)),
+  SELECTCOLUMNS(__DS0PrimaryWindowed_categories, "__slot", "categories", "__part", 1, "__label", 'DimProductCategory'[EnglishProductCategoryName], "__date", BLANK(), "__sales", [Total_Sales], "__margin", [Gross_Margin], "__orders", [Order_Count], "__partial", BLANK(), "__text", BLANK(), "__num", BLANK(), "__count", BLANK())
+)
+ORDER BY [__slot], [__part], [__date], [__sales] DESC, [__label]

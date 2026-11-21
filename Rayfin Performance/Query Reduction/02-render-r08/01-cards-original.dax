@@ -1,0 +1,19 @@
+EVALUATE
+CALCULATETABLE(
+    ROW(
+        "Sales", [Total Sales],
+        "Cost", [Total Cost],
+        "Profit", [Gross Profit],
+        "Margin", [Gross Margin],
+        "Orders", [Order Count],
+        "Lines", [Order Lines],
+        "AOV", [AOV],
+        "SalesMoM", [Sales MoM %],
+        "SalesYoY", [Sales YoY %],
+        "SalesCompare", [Sales Compare Text],
+        "OrdersCompare", [Orders Compare Text],
+        "YoYCompare", [Sales YoY Compare Text],
+        "Partial", [Partial Month Text],
+        "SourceLastDate", [Source Last Date]
+    ), TREATAS({"2013-11"}, 'DimDate'[YearMonth])
+)

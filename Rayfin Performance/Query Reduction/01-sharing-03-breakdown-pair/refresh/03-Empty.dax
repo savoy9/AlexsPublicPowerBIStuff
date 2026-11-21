@@ -1,0 +1,11 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Empty Text] = 
+		(/* USER DAX BEGIN */
+IF(COALESCE([Order Lines],0)=0,"No sales for this selection","")
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "AW Empty Text", IGNORE('FactInternetSales'[AW Empty Text]))

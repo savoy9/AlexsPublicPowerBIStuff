@@ -1,0 +1,17 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Selected Month] = 
+		(/* USER DAX BEGIN */
+VAR ym=SELECTEDVALUE(DimDate[YearMonthKey]) RETURN IF(ISBLANK(ym),"Select one month",FORMAT(DATE(INT(ym/100),MOD(ym,100),1),"MMM yyyy"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Partial Badge] = 
+		(/* USER DAX BEGIN */
+COALESCE([Partial Month Text],"")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Empty Text] = 
+		(/* USER DAX BEGIN */
+IF(COALESCE([Order Lines],0)=0,"No sales for this selection","")
+/* USER DAX END */)
+VAR __CardsFilter = TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+SUMMARIZECOLUMNS(__CardsFilter, "__card_Month", IGNORE('FactInternetSales'[AW Selected Month]), "__card_Partial", IGNORE('FactInternetSales'[AW Partial Badge]), "__card_Empty", IGNORE('FactInternetSales'[AW Empty Text]))

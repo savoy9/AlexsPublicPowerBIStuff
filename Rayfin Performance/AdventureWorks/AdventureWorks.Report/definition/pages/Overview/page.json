@@ -1,0 +1,637 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "Overview",
+  "displayName": "Monthly performance",
+  "displayOption": "FitToPage",
+  "height": 900,
+  "width": 1440,
+  "howCreated": "Copilot",
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F3F6FA'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "Month",
+      "target": "Title",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "SelectedMonth",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Basis",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Where",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Month",
+      "target": "What",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Reset",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "PartialBadge",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "EmptyMessage",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Sales",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Margin",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Orders",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "AOV",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "SalesCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "SalesYoY",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Profit",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "OrdersCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "AOVInfo",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Trend",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Countries",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Month",
+      "target": "Categories",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Title",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "SelectedMonth",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Basis",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Where",
+      "target": "What",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Reset",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "PartialBadge",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "EmptyMessage",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Sales",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Margin",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Orders",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "AOV",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "SalesCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "SalesYoY",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Profit",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "OrdersCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "AOVInfo",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Countries",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Where",
+      "target": "Categories",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Title",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "SelectedMonth",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Basis",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "What",
+      "target": "Where",
+      "type": "NoFilter"
+    },
+    {
+      "source": "What",
+      "target": "Reset",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "PartialBadge",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "EmptyMessage",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Sales",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Margin",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Orders",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "AOV",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "SalesCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "SalesYoY",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Profit",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "OrdersCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "AOVInfo",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Countries",
+      "type": "DataFilter"
+    },
+    {
+      "source": "What",
+      "target": "Categories",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Title",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "SelectedMonth",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Basis",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Where",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "What",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Reset",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "PartialBadge",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "EmptyMessage",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Sales",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Margin",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Orders",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "AOV",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "SalesCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "SalesYoY",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Profit",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "OrdersCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "AOVInfo",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Countries",
+      "target": "Categories",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Title",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "SelectedMonth",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Basis",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Where",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "What",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Reset",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "PartialBadge",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "EmptyMessage",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Sales",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Margin",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Orders",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "AOV",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "SalesCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "SalesYoY",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Profit",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "OrdersCompare",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "AOVInfo",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Categories",
+      "target": "Countries",
+      "type": "DataFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Title",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "SelectedMonth",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Basis",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Where",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "What",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Reset",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "PartialBadge",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "EmptyMessage",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Sales",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Margin",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Orders",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "AOV",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "SalesCompare",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "SalesYoY",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Profit",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "OrdersCompare",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "AOVInfo",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Countries",
+      "type": "NoFilter"
+    },
+    {
+      "source": "Trend",
+      "target": "Categories",
+      "type": "NoFilter"
+    }
+  ]
+}

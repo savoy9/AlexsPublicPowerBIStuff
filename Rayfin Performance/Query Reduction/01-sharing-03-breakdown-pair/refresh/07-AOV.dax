@@ -1,0 +1,11 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Card AOV] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([AOV]),"—",FORMAT([AOV],"$#,0.00"))
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "AW Card AOV", IGNORE('FactInternetSales'[AW Card AOV]))

@@ -1,0 +1,2 @@
+EVALUATE
+CALCULATETABLE(ROW("SalesCompare", [Sales Compare Text], "OrdersCompare", [Orders Compare Text], "YoYCompare", [Sales YoY Compare Text]), TREATAS({"2013-11"}, 'DimDate'[YearMonth]))

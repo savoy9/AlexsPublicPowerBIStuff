@@ -1,0 +1,5 @@
+**/.pbi/
+**/.env
+**/.env.*
+**/.deployments.json
+**/.lockfile.json

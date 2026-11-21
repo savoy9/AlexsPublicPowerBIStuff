@@ -1,0 +1,14 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Selected Month] = 
+		(/* USER DAX BEGIN */
+VAR ym=SELECTEDVALUE(DimDate[YearMonthKey]) RETURN IF(ISBLANK(ym),"Select one month",FORMAT(DATE(INT(ym/100),MOD(ym,100),1),"MMM yyyy"))
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(
+		__DS0FilterTable,
+		"AW Selected Month", IGNORE('FactInternetSales'[AW Selected Month])
+	)

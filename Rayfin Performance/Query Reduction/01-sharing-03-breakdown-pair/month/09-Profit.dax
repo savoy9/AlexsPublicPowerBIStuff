@@ -1,0 +1,5 @@
+DEFINE VAR __DS0FilterTable = 
+	TREATAS({"2013-11"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "Gross_Profit", IGNORE('FactInternetSales'[Gross Profit]))

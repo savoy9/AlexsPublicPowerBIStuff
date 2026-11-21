@@ -1,0 +1,9 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'DimSalesTerritory'[SalesTerritoryCountry],
+    TREATAS({"2013-11"}, 'DimDate'[YearMonth]),
+    "Sales", [Total Sales],
+    "Orders", [Order Count],
+    "Margin", [Gross Margin]
+)
+ORDER BY [Sales] DESC, 'DimSalesTerritory'[SalesTerritoryCountry] ASC

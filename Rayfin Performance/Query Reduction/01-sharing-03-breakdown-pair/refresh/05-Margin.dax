@@ -1,0 +1,11 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Card Margin] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Gross Margin]),"—",FORMAT([Gross Margin],"0.0%"))
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "AW Card Margin", IGNORE('FactInternetSales'[AW Card Margin]))

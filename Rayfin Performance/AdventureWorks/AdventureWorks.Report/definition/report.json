@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.0.0/schema.json",
+  "themeCollection": {},
+  "settings": {
+    "isPersistentUserStateDisabled": true,
+    "exportDataMode": "None",
+    "defaultFilterActionIsDataFilter": true,
+    "useCrossReportDrillthrough": false,
+    "allowInlineExploration": false,
+    "useEnhancedTooltips": true
+  },
+  "annotations": [
+    {
+      "name": "SourceAndScope",
+      "value": "Internet Sales only; no reseller sales. Currency USD (assumed), pending primary-source confirmation."
+    }
+  ]
+}

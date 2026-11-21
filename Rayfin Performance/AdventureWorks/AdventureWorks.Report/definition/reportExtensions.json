@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportExtension/1.0.0/schema.json",
+  "name": "extension",
+  "entities": [
+    {
+      "name": "FactInternetSales",
+      "measures": [
+        {
+          "name": "AW Card Sales",
+          "dataType": "Text",
+          "expression": "VAR v=[Total Sales] RETURN IF(ISBLANK(v),\"—\",IF(ABS(v)>=1000000,FORMAT(v/1000000,\"$0.0\")&\"M\",IF(ABS(v)>=1000,FORMAT(v/1000,\"$0.0\")&\"K\",FORMAT(v,\"$0.00\"))))",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Card Margin",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Gross Margin]),\"—\",FORMAT([Gross Margin],\"0.0%\"))",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Card Orders",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Order Count]),\"—\",FORMAT([Order Count],\"#,0\"))",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Card AOV",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([AOV]),\"—\",FORMAT([AOV],\"$#,0.00\"))",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Selected Month",
+          "dataType": "Text",
+          "expression": "VAR ym=SELECTEDVALUE(DimDate[YearMonthKey]) RETURN IF(ISBLANK(ym),\"Select one month\",FORMAT(DATE(INT(ym/100),MOD(ym,100),1),\"MMM yyyy\"))",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Partial Badge",
+          "dataType": "Text",
+          "expression": "COALESCE([Partial Month Text],\"\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Empty Text",
+          "dataType": "Text",
+          "expression": "IF(COALESCE([Order Lines],0)=0,\"No sales for this selection\",\"\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Sales Compare",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Sales MoM %]),[Sales Compare Text],IF([Sales MoM %]>=0,\"▲ \",\"▼ \")&[Sales Compare Text])",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Orders Compare",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Orders MoM %]),[Orders Compare Text],IF([Orders MoM %]>=0,\"▲ \",\"▼ \")&[Orders Compare Text])",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW YoY Compare",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Sales YoY %]),[Sales YoY Compare Text],IF([Sales YoY %]>=0,\"▲ \",\"▼ \")&[Sales YoY Compare Text])",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Detail Context",
+          "dataType": "Text",
+          "expression": "VAR m=SELECTEDVALUE(DimDate[YearMonth],\"All months\") VAR g=IF(ISFILTERED(DimSalesTerritory[SalesTerritoryGroup]),CONCATENATEX(VALUES(DimSalesTerritory[SalesTerritoryGroup]),DimSalesTerritory[SalesTerritoryGroup],\", \"),\"All groups\") VAR c=IF(ISFILTERED(DimSalesTerritory[SalesTerritoryCountry]),CONCATENATEX(VALUES(DimSalesTerritory[SalesTerritoryCountry]),DimSalesTerritory[SalesTerritoryCountry],\", \"),\"All countries\") VAR p=IF(ISFILTERED(DimProductCategory[EnglishProductCategoryName]),CONCATENATEX(VALUES(DimProductCategory[EnglishProductCategoryName]),DimProductCategory[EnglishProductCategoryName],\", \"),\"All categories\") RETURN m & \"  ·  \" & g & \"  ·  \" & c & \"  ·  \" & p",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Country Title",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Total Sales]),\"No data for the current filters\",\"Where · Country — click to filter; right-click to drill through\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Category Title",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Total Sales]),\"No data for the current filters\",\"What · Category — click to filter; right-click to drill through\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Trend Title",
+          "dataType": "Text",
+          "expression": "VAR hi=[Source Last Date] VAR lo=EDATE(DATE(YEAR(hi),MONTH(hi),1),-11) VAR n=CALCULATE([Order Lines],FILTER(ALL(DimDate),DimDate[FullDateAlternateKey]>=lo && DimDate[FullDateAlternateKey]<=EOMONTH(hi,0))) VAR coverage=CALCULATE([Partial Month Text],REMOVEFILTERS(DimDate),TREATAS({FORMAT(hi,\"yyyy-MM\")},DimDate[YearMonth])) RETURN \"12-month trend · \"&FORMAT(lo,\"MMM yyyy\")&\"–\"&FORMAT(hi,\"MMM yyyy\")&IF(COALESCE(n,0)=0,\" · No data for the current filters — clear Where/What or Reset\",\"\")&IF(NOT ISBLANK(coverage),\" · \"&coverage,\"\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        },
+        {
+          "name": "AW Detail Title",
+          "dataType": "Text",
+          "expression": "IF(ISBLANK([Total Sales]),\"No sales for this selection\",\"Order lines · first 500 by date, order, line; matching count above and full totals below\")",
+          "hidden": true,
+          "description": "Presentation only; reuses shared business measures without modifying the semantic model."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Selected Month] = 
+		(/* USER DAX BEGIN */
+VAR ym=SELECTEDVALUE(DimDate[YearMonthKey]) RETURN IF(ISBLANK(ym),"Select one month",FORMAT(DATE(INT(ym/100),MOD(ym,100),1),"MMM yyyy"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Partial Badge] = 
+		(/* USER DAX BEGIN */
+COALESCE([Partial Month Text],"")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Empty Text] = 
+		(/* USER DAX BEGIN */
+IF(COALESCE([Order Lines],0)=0,"No sales for this selection","")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Sales] = 
+		(/* USER DAX BEGIN */
+VAR v=[Total Sales] RETURN IF(ISBLANK(v),"—",IF(ABS(v)>=1000000,FORMAT(v/1000000,"$0.0")&"M",IF(ABS(v)>=1000,FORMAT(v/1000,"$0.0")&"K",FORMAT(v,"$0.00"))))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Margin] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Gross Margin]),"—",FORMAT([Gross Margin],"0.0%"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card Orders] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Order Count]),"—",FORMAT([Order Count],"#,0"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Card AOV] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([AOV]),"—",FORMAT([AOV],"$#,0.00"))
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Sales Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Sales MoM %]),[Sales Compare Text],IF([Sales MoM %]>=0,"▲ ","▼ ")&[Sales Compare Text])
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Orders Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Orders MoM %]),[Orders Compare Text],IF([Orders MoM %]>=0,"▲ ","▼ ")&[Orders Compare Text])
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW YoY Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Sales YoY %]),[Sales YoY Compare Text],IF([Sales YoY %]>=0,"▲ ","▼ ")&[Sales YoY Compare Text])
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Country Title] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Total Sales]),"No data for the current filters","Where · Country — click to filter; right-click to drill through")
+/* USER DAX END */)
+MEASURE 'FactInternetSales'[AW Category Title] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Total Sales]),"No data for the current filters","What · Category — click to filter; right-click to drill through")
+/* USER DAX END */)
+VAR __CardsFilter = TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+
+	VAR __DS0FilterTable_countries = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+	VAR __DS0Core_countries = 
+		SUMMARIZECOLUMNS(
+			'DimSalesTerritory'[SalesTerritoryCountry],
+			__DS0FilterTable_countries,
+			"Total_Sales", 'FactInternetSales'[Total Sales],
+			"Gross_Margin", IGNORE('FactInternetSales'[Gross Margin]),
+			"Order_Count", IGNORE('FactInternetSales'[Order Count])
+		)
+
+	VAR __DS0PrimaryWindowed_countries = 
+		TOPN(1001, __DS0Core_countries, [Total_Sales], 0, 'DimSalesTerritory'[SalesTerritoryCountry], 1)
+
+
+	VAR __DS0FilterTable_categories = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+	VAR __DS0Core_categories = 
+		SUMMARIZECOLUMNS(
+			'DimProductCategory'[EnglishProductCategoryName],
+			__DS0FilterTable_categories,
+			"Total_Sales", 'FactInternetSales'[Total Sales],
+			"Gross_Margin", IGNORE('FactInternetSales'[Gross Margin]),
+			"Order_Count", IGNORE('FactInternetSales'[Order Count])
+		)
+
+	VAR __DS0PrimaryWindowed_categories = 
+		TOPN(1001, __DS0Core_categories, [Total_Sales], 0, 'DimProductCategory'[EnglishProductCategoryName], 1)
+VAR __Wide = SUMMARIZECOLUMNS(__CardsFilter, "__card_Month", IGNORE('FactInternetSales'[AW Selected Month]), "__card_Partial", IGNORE('FactInternetSales'[AW Partial Badge]), "__card_Empty", IGNORE('FactInternetSales'[AW Empty Text]), "__card_Sales", IGNORE('FactInternetSales'[AW Card Sales]), "__card_Margin", IGNORE('FactInternetSales'[AW Card Margin]), "__card_Orders", IGNORE('FactInternetSales'[AW Card Orders]), "__card_AOV", IGNORE('FactInternetSales'[AW Card AOV]), "__card_SalesCompare", IGNORE('FactInternetSales'[AW Sales Compare]), "__card_Profit", IGNORE('FactInternetSales'[Gross Profit]), "__card_OrdersCompare", IGNORE('FactInternetSales'[AW Orders Compare]), "__card_YoYCompare", IGNORE('FactInternetSales'[AW YoY Compare]))
+
+EVALUATE
+UNION(
+  SELECTCOLUMNS(__Wide, "__slot", "cards", "__part", 0, "__label", BLANK(), "__date", BLANK(), "__sales", BLANK(), "__margin", BLANK(), "__orders", BLANK(), "__partial", BLANK(), "__text", BLANK(), "__num", BLANK(), "__count", BLANK(), "__card_Month", [__card_Month], "__card_Partial", [__card_Partial], "__card_Empty", [__card_Empty], "__card_Sales", [__card_Sales], "__card_Margin", [__card_Margin], "__card_Orders", [__card_Orders], "__card_AOV", [__card_AOV], "__card_SalesCompare", [__card_SalesCompare], "__card_Profit", [__card_Profit], "__card_OrdersCompare", [__card_OrdersCompare], "__card_YoYCompare", [__card_YoYCompare]),
+  SELECTCOLUMNS(SUMMARIZECOLUMNS(
+		__DS0FilterTable_countries,
+		"AW Country Title", IGNORE('FactInternetSales'[AW Country Title])
+	), "__slot", "countries", "__part", 0, "__label", BLANK(), "__date", BLANK(), "__sales", BLANK(), "__margin", BLANK(), "__orders", BLANK(), "__partial", BLANK(), "__text", [AW Country Title], "__num", BLANK(), "__count", COALESCE(COUNTROWS(__DS0PrimaryWindowed_countries), 0), "__card_Month", BLANK(), "__card_Partial", BLANK(), "__card_Empty", BLANK(), "__card_Sales", BLANK(), "__card_Margin", BLANK(), "__card_Orders", BLANK(), "__card_AOV", BLANK(), "__card_SalesCompare", BLANK(), "__card_Profit", BLANK(), "__card_OrdersCompare", BLANK(), "__card_YoYCompare", BLANK()),
+  SELECTCOLUMNS(__DS0PrimaryWindowed_countries, "__slot", "countries", "__part", 1, "__label", 'DimSalesTerritory'[SalesTerritoryCountry], "__date", BLANK(), "__sales", [Total_Sales], "__margin", [Gross_Margin], "__orders", [Order_Count], "__partial", BLANK(), "__text", BLANK(), "__num", BLANK(), "__count", BLANK(), "__card_Month", BLANK(), "__card_Partial", BLANK(), "__card_Empty", BLANK(), "__card_Sales", BLANK(), "__card_Margin", BLANK(), "__card_Orders", BLANK(), "__card_AOV", BLANK(), "__card_SalesCompare", BLANK(), "__card_Profit", BLANK(), "__card_OrdersCompare", BLANK(), "__card_YoYCompare", BLANK()),
+  SELECTCOLUMNS(SUMMARIZECOLUMNS(
+		__DS0FilterTable_categories,
+		"AW Category Title", IGNORE('FactInternetSales'[AW Category Title])
+	), "__slot", "categories", "__part", 0, "__label", BLANK(), "__date", BLANK(), "__sales", BLANK(), "__margin", BLANK(), "__orders", BLANK(), "__partial", BLANK(), "__text", [AW Category Title], "__num", BLANK(), "__count", COALESCE(COUNTROWS(__DS0PrimaryWindowed_categories), 0), "__card_Month", BLANK(), "__card_Partial", BLANK(), "__card_Empty", BLANK(), "__card_Sales", BLANK(), "__card_Margin", BLANK(), "__card_Orders", BLANK(), "__card_AOV", BLANK(), "__card_SalesCompare", BLANK(), "__card_Profit", BLANK(), "__card_OrdersCompare", BLANK(), "__card_YoYCompare", BLANK()),
+  SELECTCOLUMNS(__DS0PrimaryWindowed_categories, "__slot", "categories", "__part", 1, "__label", 'DimProductCategory'[EnglishProductCategoryName], "__date", BLANK(), "__sales", [Total_Sales], "__margin", [Gross_Margin], "__orders", [Order_Count], "__partial", BLANK(), "__text", BLANK(), "__num", BLANK(), "__count", BLANK(), "__card_Month", BLANK(), "__card_Partial", BLANK(), "__card_Empty", BLANK(), "__card_Sales", BLANK(), "__card_Margin", BLANK(), "__card_Orders", BLANK(), "__card_AOV", BLANK(), "__card_SalesCompare", BLANK(), "__card_Profit", BLANK(), "__card_OrdersCompare", BLANK(), "__card_YoYCompare", BLANK())
+)
+ORDER BY [__slot], [__part], [__date], [__sales] DESC, [__label]

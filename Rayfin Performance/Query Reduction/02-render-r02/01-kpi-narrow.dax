@@ -1,0 +1,2 @@
+EVALUATE
+SUMMARIZECOLUMNS(TREATAS({"2013-11"}, 'DimDate'[YearMonth]), "Sales", IGNORE([Total Sales]), "Profit", IGNORE([Gross Profit]), "Margin", IGNORE([Gross Margin]), "Orders", IGNORE([Order Count]), "Lines", IGNORE([Order Lines]), "AOV", IGNORE([AOV]), "SalesCompare", IGNORE([Sales Compare Text]), "OrdersCompare", IGNORE([Orders Compare Text]), "YoYCompare", IGNORE([Sales YoY Compare Text]), "Partial", IGNORE([Partial Month Text]), "SourceLastDate", IGNORE([Source Last Date]))

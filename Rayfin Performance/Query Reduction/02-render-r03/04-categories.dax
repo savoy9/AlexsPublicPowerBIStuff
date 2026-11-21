@@ -1,0 +1,3 @@
+EVALUATE
+TOPN(1001, SUMMARIZECOLUMNS('DimProductCategory'[EnglishProductCategoryName], TREATAS({"2013-11"}, 'DimDate'[YearMonth]), "Sales", [Total Sales], "Orders", IGNORE([Order Count]), "Margin", IGNORE([Gross Margin])), [Sales], 0, 'DimProductCategory'[EnglishProductCategoryName], 1)
+ORDER BY [Sales] DESC, 'DimProductCategory'[EnglishProductCategoryName]

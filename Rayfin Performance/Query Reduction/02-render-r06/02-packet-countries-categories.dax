@@ -1,0 +1,6 @@
+EVALUATE
+UNION(
+SELECTCOLUMNS(TOPN(1001, SUMMARIZECOLUMNS('DimSalesTerritory'[SalesTerritoryCountry], TREATAS({"2013-11"}, 'DimDate'[YearMonth]), "Sales", [Total Sales], "Orders", IGNORE([Order Count]), "Margin", IGNORE([Gross Margin])), [Sales], 0, 'DimSalesTerritory'[SalesTerritoryCountry], 1), "Slot", "countries", "Label", 'DimSalesTerritory'[SalesTerritoryCountry], "BarSales", [Sales], "BarMargin", [Margin], "BarOrders", [Orders]),
+SELECTCOLUMNS(TOPN(1001, SUMMARIZECOLUMNS('DimProductCategory'[EnglishProductCategoryName], TREATAS({"2013-11"}, 'DimDate'[YearMonth]), "Sales", [Total Sales], "Orders", IGNORE([Order Count]), "Margin", IGNORE([Gross Margin])), [Sales], 0, 'DimProductCategory'[EnglishProductCategoryName], 1), "Slot", "categories", "Label", 'DimProductCategory'[EnglishProductCategoryName], "BarSales", [Sales], "BarMargin", [Margin], "BarOrders", [Orders])
+)
+ORDER BY [Slot], [BarSales] DESC, [Label]

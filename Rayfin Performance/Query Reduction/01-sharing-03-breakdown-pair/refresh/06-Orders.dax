@@ -1,0 +1,11 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW Card Orders] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Order Count]),"—",FORMAT([Order Count],"#,0"))
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "AW Card Orders", IGNORE('FactInternetSales'[AW Card Orders]))

@@ -1,0 +1,11 @@
+DEFINE
+	MEASURE 'FactInternetSales'[AW YoY Compare] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Sales YoY %]),[Sales YoY Compare Text],IF([Sales YoY %]>=0,"▲ ","▼ ")&[Sales YoY Compare Text])
+/* USER DAX END */)
+
+	VAR __DS0FilterTable = 
+		TREATAS({"2013-11"}, 'DimDate'[YearMonth])
+
+EVALUATE
+	SUMMARIZECOLUMNS(__DS0FilterTable, "AW YoY Compare", IGNORE('FactInternetSales'[AW YoY Compare]))

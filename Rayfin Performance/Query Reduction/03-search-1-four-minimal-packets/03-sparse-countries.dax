@@ -1,0 +1,31 @@
+DEFINE
+MEASURE 'FactInternetSales'[AW Country Title] = 
+		(/* USER DAX BEGIN */
+IF(ISBLANK([Total Sales]),"No data for the current filters","Where · Country — click to filter; right-click to drill through")
+/* USER DAX END */)
+
+
+	VAR __DS0FilterTable_countries = 
+		TREATAS({"2013-12"}, 'DimDate'[YearMonth])
+
+	VAR __DS0Core_countries = 
+		SUMMARIZECOLUMNS(
+			'DimSalesTerritory'[SalesTerritoryCountry],
+			__DS0FilterTable_countries,
+			"Total_Sales", 'FactInternetSales'[Total Sales],
+			"Gross_Margin", IGNORE('FactInternetSales'[Gross Margin]),
+			"Order_Count", IGNORE('FactInternetSales'[Order Count])
+		)
+
+	VAR __DS0PrimaryWindowed_countries = 
+		TOPN(1001, __DS0Core_countries, [Total_Sales], 0, 'DimSalesTerritory'[SalesTerritoryCountry], 1)
+
+EVALUATE
+UNION(
+  SELECTCOLUMNS(SUMMARIZECOLUMNS(
+		__DS0FilterTable_countries,
+		"AW Country Title", IGNORE('FactInternetSales'[AW Country Title])
+	), "__slot", "countries", "__part", 0, "__label", BLANK(), "__date", BLANK(), "__sales", BLANK(), "__margin", BLANK(), "__orders", BLANK(), "__partial", BLANK(), "__text", [AW Country Title], "__num", BLANK(), "__count", BLANK()),
+  SELECTCOLUMNS(__DS0PrimaryWindowed_countries, "__slot", "countries", "__part", 1, "__label", 'DimSalesTerritory'[SalesTerritoryCountry], "__date", BLANK(), "__sales", [Total_Sales], "__margin", [Gross_Margin], "__orders", [Order_Count], "__partial", BLANK(), "__text", BLANK(), "__num", BLANK(), "__count", BLANK())
+)
+ORDER BY [__slot], [__part], [__date], [__sales] DESC, [__label]

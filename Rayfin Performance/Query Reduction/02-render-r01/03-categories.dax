@@ -1,0 +1,9 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'DimProductCategory'[EnglishProductCategoryName],
+    TREATAS({"2013-11"}, 'DimDate'[YearMonth]),
+    "Sales", [Total Sales],
+    "Orders", [Order Count],
+    "Margin", [Gross Margin]
+)
+ORDER BY [Sales] DESC, 'DimProductCategory'[EnglishProductCategoryName] ASC
