@@ -1,0 +1,204 @@
+//-----------------------------------------------------------------------
+// <copyright company="Microsoft Corporation">
+//        Copyright (c) Microsoft Corporation.  All rights reserved.
+//        Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+//-----------------------------------------------------------------------
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { SemanticModelQueryResult } from "@microsoft/rayfin-connector-fabric-semanticmodel";
+import type { SemanticModelConnectors } from "@/lib/connectors";
+import { getRayfinClient } from "@/lib/rayfin-client";
+import { cachedQuery, cachePrefixKeyFor, clearCachedQueries, type CachedQueryResult } from "@/lib/query-cache";
+
+import { SemanticModelQueryError, toThrownQueryResult } from "@/lib/semantic-model-errors";
+
+interface UseSemanticModelQueryOptions {
+    /** Connector name from `rayfin.yml` (e.g., "salesModel"). */
+    connection: string;
+    /** DAX query string. */
+    query: string;
+    /** If true, skip reading from cache (still writes the fresh result). */
+    bypassCache?: boolean;
+}
+
+interface UseSemanticModelQueryResult {
+    data: CachedQueryResult<SemanticModelQueryResult> | undefined;
+    isLoading: boolean;
+    error: Error | undefined;
+    refetch: () => Promise<void>;
+}
+
+/**
+ * Runs one DAX query through the semantic model connector.
+ *
+ * `executeQuery` resolves to a `SemanticModelQueryResult`; a query that reaches
+ * Power BI and fails there comes back as a `status: "error"` result. The call can
+ * still throw (transport, auth, and server failures on the deployed path, or an
+ * unknown connector name). Those are folded into the same union so callers only
+ * ever branch on `status`.
+ */
+async function executeSemanticModelQuery(
+    connection: string,
+    query: string,
+): Promise<SemanticModelQueryResult> {
+    try {
+        // The generated schema lists only the scaffolded names (none in the template); the hook
+        // takes any name, and an unknown one throws, which is reported below.
+        const connectors = getRayfinClient().connectors as SemanticModelConnectors;
+        return await connectors[connection].executeQuery({ query });
+    } catch (err) {
+        return toThrownQueryResult(err, connection);
+    }
+}
+
+/**
+ * Runs one DAX query through the app-level query cache. `useSemanticModelQuery` and
+ * `executeQueryFactory` both read and write semantic model results through this function.
+ */
+export function querySemanticModel(
+    connection: string,
+    query: string,
+    bypassCache: boolean,
+): Promise<CachedQueryResult<SemanticModelQueryResult>> {
+    return cachedQuery({
+        cachePrefixKey: cachePrefixKeyFor("semanticModels", connection),
+        query,
+        bypassCache,
+        execute: () => executeSemanticModelQuery(connection, query),
+    });
+}
+
+/**
+ * React hook that executes a DAX query against a Power BI semantic model
+ * through the `fabric-semanticmodel` connector. Results are cached by the
+ * app-level query cache in `src/lib/query-cache.ts`, which is shared across
+ * every data source.
+ *
+ * The connector name is declared in `rayfin.yml` (managed by
+ * `npx rayfin connector add`). The connector's workspace and item are resolved
+ * server-side, so the app never sends them.
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading } = useSemanticModelQuery({
+ *   connection: "salesModel",
+ *   query: 'EVALUATE SUMMARIZE(Sales, Products[Name], "Total", SUM(Sales[Amount]))',
+ * });
+ *
+ * if (data?.status === "success") {
+ *   const table = data.table;
+ *   // table.columns, table.rows
+ * }
+ *
+ * @example
+ * // Handling errors. The hook never throws. Every failure — a connector throw
+ * // or a failure Power BI returned — arrives as `data.status === "error"` with
+ * // full diagnostics, also retained on `error` as a SemanticModelQueryError
+ * // for convenience. Branch on `status`; `error` is never the only signal.
+ * if (data?.status === "error") {
+ *   console.error(data.error.category, data.error.message);
+ * }
+ *
+ * @example
+ * // Checking cache status
+ * if (data?.fromCache) {
+ *   console.log(`Cached at ${data.cachedAt}`);
+ * }
+ *
+ * @example
+ * // Bypassing cache for fresh data
+ * const { data } = useSemanticModelQuery({
+ *   connection: "salesModel",
+ *   query: 'EVALUATE ...',
+ *   bypassCache: true,
+ * });
+ *
+ * @remarks
+ * If either `connection` or `query` is empty the hook stays idle: it does not
+ * query, and `data`, `error`, and `isLoading` all stay falsy. That is deliberate,
+ * so a query can wait on a value that is not resolved yet. A non-empty connector
+ * name that the SDK cannot resolve returns an `"unknown"` error that points
+ * back to `rayfin.yml` and `npx rayfin connector add`.
+ *
+ * Results are deep-frozen. Copy before sorting or otherwise reordering a table.
+ *
+ * `clearQueryCache()` does not re-render this hook — it clears what the next
+ * query reads. Call `refetch()` to re-read now.
+ */
+export function useSemanticModelQuery(
+    options: UseSemanticModelQueryOptions,
+): UseSemanticModelQueryResult {
+    const { connection, query, bypassCache } = options;
+    const [data, setData] = useState<CachedQueryResult<SemanticModelQueryResult> | undefined>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<Error | undefined>();
+    const requestIdRef = useRef(0);
+
+    const canExecute = Boolean(connection && query);
+
+    const execute = useCallback(
+        async (forceRefresh = false) => {
+            const requestId = ++requestIdRef.current;
+            const isLatestRequest = () => requestId === requestIdRef.current;
+
+            if (!canExecute) {
+                setData(undefined);
+                setError(undefined);
+                setIsLoading(false);
+                return;
+            }
+
+            setIsLoading(true);
+            setError(undefined);
+
+            // `refetch()` means "get fresh data", so it skips the cache.
+            const skipCache = Boolean(bypassCache) || forceRefresh;
+
+            try {
+                const result = await querySemanticModel(connection, query, skipCache);
+
+                if (!isLatestRequest()) return;
+
+                setData(result);
+
+                if (result.status === "error") {
+                    setError(new SemanticModelQueryError(result.error));
+                }
+            } catch (err) {
+                if (!isLatestRequest()) return;
+
+                setError(err instanceof Error ? err : new Error(String(err)));
+            } finally {
+                if (isLatestRequest()) {
+                    setIsLoading(false);
+                }
+            }
+        },
+        [connection, query, bypassCache, canExecute],
+    );
+
+    useEffect(() => {
+        void execute(); // eslint-disable-line react-hooks/set-state-in-effect
+        return () => {
+            requestIdRef.current += 1;
+        };
+    }, [execute]);
+
+    const refetch = useCallback(() => execute(true), [execute]);
+
+    return { data, isLoading, error, refetch };
+}
+
+/**
+ * Clears cached semantic model query results.
+ * Pass a connector name to clear a specific connection, or omit to clear
+ * every semantic model connection.
+ *
+ * @example
+ * clearQueryCache();              // clear every semantic model connection
+ * clearQueryCache("salesModel");  // clear a specific connection
+ */
+export function clearQueryCache(connection?: string): void {
+    clearCachedQueries(connection ? cachePrefixKeyFor("semanticModels", connection) : "semanticModels");
+}

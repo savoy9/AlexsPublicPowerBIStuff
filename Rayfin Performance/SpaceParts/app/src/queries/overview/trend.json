@@ -1,0 +1,39 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Shared model Trend Date measures: fixed 24 complete billing months, ignoring the page Month only.",
+  "encoding": {
+    "x": { "field": "Month", "type": "ordinal", "sort": "ascending", "axis": { "title": null, "labelAngle": -45 } },
+    "tooltip": [
+      { "field": "Month", "type": "ordinal", "title": "Billing month" },
+      { "field": "Sales", "type": "quantitative", "title": "Net sales EUR", "format": ",.2f" },
+      { "field": "Budget", "type": "quantitative", "title": "Budget EUR", "format": ",.2f" },
+      { "field": "ReturnsPct", "type": "quantitative", "title": "Returns & warranty share", "format": ".1%" },
+      { "field": "OTD", "type": "quantitative", "title": "On-time delivery", "format": ".1%" }
+    ]
+  },
+  "layer": [
+    {
+      "mark": { "type": "bar", "cornerRadiusTopLeft": 3, "cornerRadiusTopRight": 3 },
+      "encoding": {
+        "y": { "field": "Sales", "type": "quantitative", "axis": { "title": "EUR" } },
+        "y2": { "datum": 0 },
+        "color": { "datum": "Net sales", "type": "nominal", "legend": { "title": null } }
+      }
+    },
+    {
+      "mark": { "type": "line", "point": true },
+      "encoding": {
+        "y": { "field": "Budget", "type": "quantitative", "axis": null },
+        "color": { "datum": "Budget", "type": "nominal", "legend": { "title": null } }
+      }
+    },
+    {
+      "mark": { "type": "line", "point": true },
+      "encoding": {
+        "y": { "field": "ReturnsPct", "type": "quantitative", "axis": { "title": "Returns & warranty share", "format": ".0%", "orient": "right" } },
+        "color": { "datum": "Returns & warranty share", "type": "nominal", "legend": { "title": null } }
+      }
+    }
+  ],
+  "resolve": { "scale": { "y": "independent" } }
+}

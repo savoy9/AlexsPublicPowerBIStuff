@@ -1,0 +1,39 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Product-type net sales and positive-budget markers; unavailable comparisons are explicit, with no product-grain budget.",
+  "transform": [
+    { "calculate": "datum.Budget == null ? 'No comparison: no budget' : datum.Budget <= 0 ? 'No comparison: budget ≤ 0' : !isValid(datum.Attainment) ? 'No sales for this selection' : format(datum.Attainment, '.1%')", "as": "ComparisonLabel" },
+    { "calculate": "max(isValid(datum.Sales) ? datum.Sales : 0, datum.Budget > 0 ? datum.Budget : 0)", "as": "LabelAnchor" }
+  ],
+  "encoding": {
+    "y": { "field": "Type", "type": "nominal", "sort": { "field": "Sales", "op": "max", "order": "descending" }, "axis": { "title": null } },
+    "x": { "field": "Sales", "type": "quantitative", "axis": { "title": "Net sales EUR" } },
+    "tooltip": [
+      { "field": "Type", "type": "nominal", "title": "Product type" },
+      { "field": "Sales", "type": "quantitative", "title": "Net sales EUR", "format": ",.2f" },
+      { "field": "Budget", "type": "quantitative", "title": "Budget EUR", "format": ",.2f" },
+      { "field": "BudgetGap", "type": "quantitative", "title": "Gap EUR", "format": ",.2f" },
+      { "field": "ComparisonLabel", "type": "nominal", "title": "Budget attainment" },
+      { "field": "OTD", "type": "quantitative", "title": "On-time delivery", "format": ".1%" },
+      { "field": "ReturnsPct", "type": "quantitative", "title": "Returns & warranty share", "format": ".1%" }
+    ]
+  },
+  "layer": [
+    { "mark": { "type": "bar", "cornerRadiusEnd": 3, "size": 14 }, "encoding": { "color": { "datum": "Net sales", "type": "nominal", "legend": { "title": null } } } },
+    {
+      "transform": [{ "filter": "isValid(datum.Budget) && datum.Budget > 0" }],
+      "mark": { "type": "tick", "thickness": 2, "size": 22 },
+      "encoding": { "x": { "field": "Budget", "type": "quantitative" }, "color": { "datum": "Budget", "type": "nominal", "legend": { "title": null } } }
+    },
+    {
+      "transform": [{ "filter": "datum.Budget > 0 && isValid(datum.Attainment)" }],
+      "mark": { "type": "text", "align": "left", "dx": 4 },
+      "encoding": { "x": { "field": "LabelAnchor", "type": "quantitative" }, "text": { "field": "ComparisonLabel" } }
+    },
+    {
+      "transform": [{ "filter": "!isValid(datum.Attainment)" }],
+      "mark": { "type": "text", "align": "left", "dy": 11 },
+      "encoding": { "x": { "value": 0 }, "text": { "field": "ComparisonLabel" } }
+    }
+  ]
+}

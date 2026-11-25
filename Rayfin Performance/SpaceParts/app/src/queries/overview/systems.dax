@@ -1,0 +1,6 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Regions'[System],
+    "Lines", [Invoice line count]
+)
+ORDER BY 'Regions'[System] ASC

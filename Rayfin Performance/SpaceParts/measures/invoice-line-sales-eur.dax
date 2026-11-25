@@ -1,0 +1,3 @@
+// Add to Invoices as a hidden measure. Format string: € #,0.00;(€ #,0.00)
+Invoice line sales EUR =
+IF(HASONEVALUE('Invoices'[Ingestion Row Id]), DIVIDE(SELECTEDVALUE('Invoices'[Net Invoice Value]), MAXX('Invoices', RELATED('Budget Rate'[Rate]))))

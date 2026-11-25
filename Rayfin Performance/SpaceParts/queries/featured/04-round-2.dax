@@ -1,0 +1,11 @@
+EVALUATE
+VAR WindowStart = [Trend start month]
+VAR WindowEnd = [Trend end month]
+VAR Months = SELECTCOLUMNS(GENERATESERIES(0, 23), "Key", EDATE(WindowStart, [Value]))
+VAR MonthFilter = TREATAS(FILTER(Months, [Key] <= WindowEnd), 'Trend Date'[Month Start])
+VAR Grain = SUMMARIZECOLUMNS('Trend Date'[Year Month], 'Trend Date'[Month Start], MonthFilter)
+VAR MonthKeys = SUMMARIZECOLUMNS('Trend Date'[Month Start], MonthFilter)
+RETURN NATURALLEFTOUTERJOIN(Grain, ADDCOLUMNS(MonthKeys,
+    "Sales", [Trend Net sales EUR], "Budget", [Trend Budget EUR], "ReturnsPct", [Trend Returns & warranty %], "OTD", [Trend On-time delivery %]
+))
+ORDER BY 'Trend Date'[Month Start] ASC

@@ -1,0 +1,19 @@
+EVALUATE
+VAR WindowStart = [Trend start month]
+VAR WindowEnd = [Trend end month]
+RETURN
+SUMMARIZECOLUMNS(
+    'Trend Date'[Year Month],
+    'Trend Date'[Month Start],
+    FILTER(
+        ALL('Trend Date'),
+        'Trend Date'[Month Start] >= WindowStart &&
+        'Trend Date'[Month Start] <= WindowEnd
+    ),
+    /*__FILTER_ARGUMENTS__*/
+    "Sales", IGNORE([Trend Net sales EUR]),
+    "Budget", IGNORE([Trend Budget EUR]),
+    "ReturnsPct", IGNORE([Trend Returns & warranty %]),
+    "OTD", IGNORE([Trend On-time delivery %])
+)
+ORDER BY 'Trend Date'[Month Start] ASC

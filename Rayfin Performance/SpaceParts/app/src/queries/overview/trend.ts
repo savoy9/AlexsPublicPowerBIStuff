@@ -1,0 +1,1 @@
+export { trend } from "./index";

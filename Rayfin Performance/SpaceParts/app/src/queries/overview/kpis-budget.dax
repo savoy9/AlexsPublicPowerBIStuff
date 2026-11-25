@@ -1,0 +1,19 @@
+EVALUATE
+CALCULATETABLE(
+    ROW(
+        "Sales", [Net sales EUR],
+        "Invoiced", [Invoiced EUR],
+        "Returns", [Returns & warranty EUR],
+        "ReturnsPct", [Returns & warranty %],
+        "OTD", [On-time delivery %],
+        "OTDChangePP", [OTD change pp],
+        "Lines", [Invoice line count],
+        "Quantity", [Net quantity],
+        "UnconvertedLines", [Unconverted lines],
+        "SourceLastDate", [Billing data through],
+        "Budget", [Budget EUR],
+        "Attainment", [Budget attainment],
+        "BudgetGap", [Budget gap EUR]
+    )
+    /*__FILTER_ARGUMENTS__*/
+)

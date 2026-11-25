@@ -1,0 +1,2 @@
+# Keep the measured DAX inputs byte-for-byte, including their line endings.
+*.dax -text

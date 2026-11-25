@@ -1,0 +1,8 @@
+EVALUATE
+VAR WindowStart = [Trend start month]
+VAR WindowEnd = [Trend end month]
+VAR Grain = SUMMARIZECOLUMNS('Trend Date'[Year Month], 'Trend Date'[Month Start], FILTER(ALL('Trend Date'), 'Trend Date'[Month Start] >= WindowStart && 'Trend Date'[Month Start] <= WindowEnd))
+RETURN ADDCOLUMNS(Grain,
+    "Sales", [Trend Net sales EUR], "Budget", [Trend Budget EUR], "ReturnsPct", [Trend Returns & warranty %], "OTD", [Trend On-time delivery %]
+)
+ORDER BY 'Trend Date'[Month Start] ASC

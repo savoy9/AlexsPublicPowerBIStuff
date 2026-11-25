@@ -1,0 +1,39 @@
+DEFINE
+    VAR __WindowStart = [Trend start month]
+    VAR __WindowEnd = [Trend end month]
+
+    VAR __DS0FilterTable =
+        FILTER(
+            ALL('Trend Date'),
+            'Trend Date'[Month Start] >= __WindowStart &&
+            'Trend Date'[Month Start] <= __WindowEnd
+        )
+
+    VAR __DS0Core =
+        SUMMARIZECOLUMNS(
+            'Trend Date'[Year Month],
+            'Trend Date'[Month Start],
+            __DS0FilterTable,
+            "Sales", IGNORE('Invoices'[Trend Net sales EUR]),
+            "Budget", IGNORE('Invoices'[Trend Budget EUR]),
+            "ReturnsPct", IGNORE('Invoices'[Trend Returns & warranty %]),
+            "OTD", IGNORE('Invoices'[Trend On-time delivery %])
+        )
+
+    VAR __DS0PrimaryShowAll =
+        ADDMISSINGITEMS(
+            'Trend Date'[Year Month],
+            'Trend Date'[Month Start],
+            __DS0Core,
+            'Trend Date'[Year Month],
+            'Trend Date'[Month Start],
+            __DS0FilterTable
+        )
+
+    VAR __DS0PrimaryWindowed =
+        TOPN(1001, __DS0PrimaryShowAll, 'Trend Date'[Year Month], 1)
+
+EVALUATE
+    __DS0PrimaryWindowed
+
+ORDER BY 'Trend Date'[Month Start] ASC

@@ -1,0 +1,33 @@
+id: spaceparts-example
+name: spaceparts-example
+version: 1.0.0
+services:
+  auth:
+    enabled: true
+    fabric:
+      enabled: true
+    allowedRedirectUris:
+      - "<YOUR_ALLOWED_APP_REDIRECT_URI>"
+  data:
+    enabled: false
+  storage:
+    enabled: false
+  staticHosting:
+    enabled: true
+    folder: dist
+    buildCommand: npm run build:fabric
+    indexDocument: index.html
+    assetAccess: protected
+  functions:
+    enabled: false
+connectors:
+  - name: salesmodel
+    type: fabric-semanticmodel
+    config:
+      workspaceId: "<YOUR_MODEL_WORKSPACE_ID>"
+      itemId: "<YOUR_SEMANTIC_MODEL_ITEM_ID>"
+    auth:
+      type: delegated
+    version: "1"
+    operations:
+      - name: executeQuery

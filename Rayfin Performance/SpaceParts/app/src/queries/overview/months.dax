@@ -1,0 +1,8 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Date'[Year Month],
+    'Date'[Month Start],
+    TREATAS({TRUE()}, 'Date'[Is Complete Billing Month]),
+    "Lines", [Invoice line count]
+)
+ORDER BY 'Date'[Month Start] ASC

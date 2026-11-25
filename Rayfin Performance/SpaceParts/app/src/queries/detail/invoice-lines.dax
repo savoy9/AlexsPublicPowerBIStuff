@@ -1,0 +1,31 @@
+EVALUATE
+SELECTCOLUMNS(
+    TOPN(
+        500,
+        CALCULATETABLE('Invoices'/*__FILTER_ARGUMENTS__*/),
+        'Invoices'[Billing Date], ASC,
+        'Invoices'[Billing Document Number], ASC,
+        'Invoices'[Billing Document Line Item Number], ASC,
+        'Invoices'[Ingestion Row Id], ASC
+    ),
+    "BillingDocument", 'Invoices'[Billing Document Number],
+    "Line", 'Invoices'[Billing Document Line Item Number],
+    "BillingDate", 'Invoices'[Billing Date],
+    "ShipDate", 'Invoices'[Ship Date],
+    "DocumentType", RELATED('Invoice Document Type'[Text]),
+    "CustomerKey", 'Invoices'[Customer Key],
+    "AccountName", RELATED('Customers'[Account Name]),
+    "KeyAccount", RELATED('Customers'[Key Account Name]),
+    "System", RELATED('Regions'[System]),
+    "ProductKey", 'Invoices'[Product Key],
+    "ProductName", RELATED('Products'[Product Name]),
+    "Type", RELATED('Product Type'[Type]),
+    "Quantity", 'Invoices'[Net Invoice Quantity],
+    "Currency", 'Invoices'[Local Currency],
+    "NetValueLocal", 'Invoices'[Net Invoice Value],
+    "FXRate", RELATED('Budget Rate'[Rate]),
+    "Sales", [Invoice line sales EUR],
+    "OnTime", 'Invoices'[OTD Indicator],
+    "RowId", 'Invoices'[Ingestion Row Id]
+)
+ORDER BY [BillingDate] ASC, [BillingDocument] ASC, [Line] ASC, [RowId] ASC

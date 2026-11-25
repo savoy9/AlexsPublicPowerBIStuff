@@ -1,0 +1,6 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Product Type'[Type],
+    "Lines", [Invoice line count]
+)
+ORDER BY 'Product Type'[Type] ASC

@@ -1,0 +1,13 @@
+EVALUATE
+SUMMARIZECOLUMNS(
+    'Customers'[Key Account Name],
+    /*__FILTER_ARGUMENTS__*/
+    "Sales", [Net sales EUR],
+    "Budget", [Budget EUR],
+    "Attainment", [Budget attainment],
+    "BudgetGap", [Budget gap EUR],
+    "OTD", [On-time delivery %],
+    "ReturnsPct", [Returns & warranty %],
+    "Lines", [Invoice line count]
+)
+ORDER BY [Sales] DESC, 'Customers'[Key Account Name] ASC
